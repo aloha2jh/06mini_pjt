@@ -11,7 +11,7 @@
 		<link rel="stylesheet" href="/css/admin.css" type="text/css"> 
 		<script type="text/javascript" src="../javascript/calendar.js"></script> 
 		<script type="text/javascript">
-		<!--
+		 
 		function fncAddProduct(){
 			//Form 유효성 검증
 		 	var name = document.detailForm.prodName.value;
@@ -27,10 +27,10 @@
 				alert("상품상세정보는 반드시 입력하여야 합니다.");
 				return;
 			}
-			if(manuDate == null || manuDate.length<1){
+			/* if(manuDate == null || manuDate.length<1){
 				alert("제조일자는 반드시 입력하셔야 합니다.");
 				return;
-			}
+			} */
 			if(price == null || price.length<1){
 				alert("가격은 반드시 입력하셔야 합니다.");
 				return;
@@ -43,7 +43,7 @@
 		function resetData(){
 			document.detailForm.reset();
 		}
-		-->
+		 
 	</script>
 	</head>
 
@@ -107,7 +107,7 @@
 						제조일자 
 					</td>
 					<td bgcolor="D6D6D6" width="1"></td> 
-					<td class="ct_write01">${ pvo.manuDate}</td>
+					<td class="ct_write01">${ pvo.manuDay}</td>
 				</tr>
 				<tr>
 					<td height="1" colspan="3" bgcolor="D6D6D6"></td>

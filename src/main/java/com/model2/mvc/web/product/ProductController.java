@@ -38,7 +38,7 @@ public class ProductController {
 	int pageSize;
 	
 	
-	// 상품추가페이지 보여달라
+	// 상품추가페이지 보여달라 (O)
 	@RequestMapping("/addProductView.do")
 	public String addUProductView() throws Exception {
   
@@ -46,66 +46,84 @@ public class ProductController {
 	}
 	
 	
-	//상품추가해달라
+	//상품추가해달라 (O)
 	@RequestMapping("/addProduct.do")
-	public String addProduct( @ModelAttribute("product") Product product ) throws Exception {
-  
+	public String addProduct( @ModelAttribute("product") Product product , Model model ) throws Exception {
+		
+		Product prod = product;
+		
+		prod.setProdTranCode("000");
+		prod.setManuDay(prod.getManuDay().substring(2,10));
 		productService.addProduct(product); 
-		return "redirect:/product/addedView.jsp";
+		
+		model.addAttribute("pvo", prod);
+		return "forward:/product/addedView.jsp";
 	}
-	
+	//(O)
 	@RequestMapping("/getProduct.do")
-	public String getProduct( @RequestParam("prodNo") int prodNo , Model model ) throws Exception {
+	public String getProduct( @RequestParam("prodNo") int prodNo , Model model, @RequestParam("menu") String menu ) throws Exception {
 		  
 		Product prod = productService.getProduct(prodNo); 
 		
+		model.addAttribute("menu",menu);
 		model.addAttribute("pvo", prod); // Model 과 View 연결
 		
 		return "forward:/product/getProduct.jsp";
 	}
 	
-//	@RequestMapping("/updateProductView.do")
-//	public String updateUserView( @RequestParam("prodNo") int prodNo , Model model ) throws Exception{ 
-//		Product prod = productService.getProduct(prodNo); 
-//		model.addAttribute("pvo", prod);   
-//		return "forward:/user/updateUser.jsp";
-//	}
+	@RequestMapping("/updateProductView.do")
+	public String updateUserView( @RequestParam("prodNo") int prodNo , Model model ) throws Exception{ 
+		Product prod = productService.getProduct(prodNo); 
+		model.addAttribute("pvo", prod);   
+		return "forward:/product/updateProduct.jsp";
+	}
 	
-//	@RequestMapping("/updateProduc.do")
-//	public String updateUser( @ModelAttribute("pvo") Product product , Model model ) throws Exception{
-//
-//		System.out.println("/updateUser.do");
-//		//Business Logic
-//		productService.updateProduct(user);
-//		
-//		String sessionId=((User)session.getAttribute("user")).getUserId();
-//		if(sessionId.equals(user.getUserId())){
-//			session.setAttribute("user", user);
-//		}
-//		
-//		return "redirect:/getUser.do?userId="+user.getUserId();
-//	}
-// 
-// 
-//	
+	//(O) 근데 날짜형식 ^^ 어떻게들어와도 되게 수정해야함~~
+	
+	@RequestMapping("/updateProduct.do")
+	public String updateUser( @ModelAttribute("pvo") Product product , Model model ) throws Exception{
+		
+		Product prod = product;
+		prod.setManuDay(prod.getManuDay().replace("-",""));
+		
+		productService.updateProduct(product);
+		 
+		//return "redirect:/getProduct.do?prodNo="+product.getProdNo();
+
+		model.addAttribute("pvo", prod);
+		return "forward:/product/addedView.jsp";
+	}
+ 
+ 
+	
+	
+	//(O)
 	@RequestMapping("/listProduct.do")
-	public String listUser( @ModelAttribute("search") Search search , Model model , HttpServletRequest request) throws Exception{
-		  
+	public String listProduct( @ModelAttribute("search") Search search , Model model , 
+							@RequestParam("menu") String menu,
+							HttpServletRequest request) throws Exception{
+		
+		//받아오는 메뉴값.  
+		System.out.println("[]메뉴값:"+menu);
+		
+		// 현재 페이지
 		if(search.getCurrentPage() ==0 ){
 			search.setCurrentPage(1);
 		}
 		search.setPageSize(pageSize);
-		 
-		Map<String , Object> map=productService.getProductList(search);
+		
+		// 리스트받아오기
+		Map<String , Object> map = productService.getProductList(search);
 		
 		Page resultPage = new Page( search.getCurrentPage(), ((Integer)map.get("totalCount")).intValue(), pageUnit, pageSize);
-		System.out.println(resultPage);
+		
 		
 		// Model 과 View 연결
-		model.addAttribute("list", map.get("list"));
+		model.addAttribute("map", map.get("list"));
 		model.addAttribute("resultPage", resultPage);
 		model.addAttribute("search", search);
+		model.addAttribute("menu", menu);
 		
-		return "forward:/search/listProduct.jsp";
+		return "forward:/product/listProduct.jsp";
 	}
 }

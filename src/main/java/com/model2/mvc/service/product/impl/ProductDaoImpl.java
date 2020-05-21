@@ -27,7 +27,12 @@ public class ProductDaoImpl implements ProductDao {
 	
 	@Override
 	public void addProduct(Product product) throws Exception {
-		sqlSession.insert("ProductMapper.addProduct", product);
+		 
+		System.out.println(product.toString());
+		
+		int i = sqlSession.insert("ProductMapper.addProduct", product); 
+		
+		System.out.println("[]"+i);
 	}
 
 	@Override

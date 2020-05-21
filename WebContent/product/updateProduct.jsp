@@ -16,7 +16,7 @@
 			//Form 유효성 검증
 		 	var name = document.detailForm.prodName.value;
 			var detail = document.detailForm.prodDetail.value;
-			var manuDate = document.detailForm.manuDate.value;
+			var manuDay = document.detailForm.manuDay.value;
 			var price = document.detailForm.price.value;
 		
 			if(name == null || name.length<1){
@@ -27,7 +27,7 @@
 				alert("상품상세정보는 반드시 입력하여야 합니다.");
 				return;
 			}
-			if(manuDate == null || manuDate.length<1){
+			if(manuDay == null || manuDay.length<1){
 				alert("제조일자는 반드시 입력하셔야 합니다.");
 				return;
 			}
@@ -110,10 +110,10 @@
 				</td>
 				<td bgcolor="D6D6D6" width="1"></td>
 				<td class="ct_write01">
-					<input type="text" readonly="readonly" name="manuDate" value=" ${ pvo.manuDate } " 	
+					<input type="text" readonly="readonly" name="manuDay" value=" ${ pvo.manuDay } " 	
 								class="ct_input_g" style="width: 100px; height: 19px" maxLength="10" minLength="6">&nbsp;
 								<img 	src="../images/ct_icon_date.gif" width="15" height="15" 
-											onclick="show_calendar('document.detailForm.manuDate', document.detailForm.manuDate.value)" />
+											onclick="show_calendar('document.detailForm.manuDay', document.detailForm.manuDay.value)" />
 				</td>
 			</tr>
 			<tr>

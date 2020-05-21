@@ -16,9 +16,9 @@
 		<result property="prodTranCode" column="tran_code" jdbcType="VARCHAR"/>  
 	</resultMap>
 	 
-	 <insert 	id="addProduct"		parameterType="product" >
+	 <insert 	id="addProduct"	parameterType="product" >
 	 	INSERT
-		INTO product  (prod_no,prod_name, prod_detail, price, manufacture_day, reg_date)   
+		INTO product  (prod_no, prod_name, prod_detail, price, manufacture_day, reg_date)   
 		VALUES	 (	seq_product_prod_no.NEXTVAL , #{prodName} , #{prodDetail} ,#{price}, #{manuDay}, SYSDATE ) 
 	 </insert>
 	  
@@ -42,18 +42,18 @@
 	   	WHERE prod_no = #{prodNo}
 	 </update>
 		  
-	<select  id="getProdList"  parameterType="search"	resultMap="prodMap">
+<!-- 	<select  id="getProdList"  parameterType="search"	resultMap="prodMap">
 	  	SELECT *
 	  	FROM (	SELECT inner_table.* , ROWNUM AS row_seq
 	  					FROM		(	SELECT select p.prod_no, p.prod_name, p.price, p.reg_date, nvl(  t.tran_status_code, '000') tran_code
 											FROM product p, transaction t 
-											<!-- ////////// if 넣어서, serachCondition 구현해야됨. --> 
+											////////// if 넣어서, serachCondition 구현해야됨. 
 											where  
            									p.prod_no = t.prod_no(+) 
         							) inner_table 	
 						WHERE ROWNUM &lt;= #{endRowNum} )
 		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}
-	 </select>
+	 </select> -->
 	   
 	 <select  id="getTotalCount"  parameterType="search"	 resultType="int">
 	  	SELECT COUNT(*)
@@ -78,17 +78,19 @@
 	  	(	SELECT inner_table.* , ROWNUM AS row_seq
 	  		FROM ( select p.prod_no, p.prod_name, p.prod_detail, p.price, p.reg_date, p.manufacture_day ,nvl(  t.tran_status_code, '000') tran_code
 					from product p, transaction t  
+					 
 						<where>
 							<if test="searchCondition != null and searchCondition == 0 and searchKeyword !='' ">
 				 				prod_no = #{searchKeyword}
 							</if>
 							<if test="searchCondition != null and searchCondition == 1 and searchKeyword !='' ">
 				 				prod_name = #{searchKeyword}
-							</if>
+							</if> 
 							<if test="true">
 								p.prod_no = t.prod_no(+)
 							</if>
-						</where> 
+						</where>  
+						
 					ORDER BY prod_no ) inner_table 	
 			WHERE ROWNUM &lt;= #{endRowNum} )
 		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum}  
